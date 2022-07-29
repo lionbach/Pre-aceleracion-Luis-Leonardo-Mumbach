@@ -13,6 +13,7 @@ public class GenreMapper {
 	
 	public GenreEntity genreDTO2Entity(GenreDTO dto) {
 		GenreEntity entity = new GenreEntity();
+		entity.setId(dto.getId());
 		entity.setName(dto.getName());
 		entity.setImg(dto.getImg());
 		return entity;

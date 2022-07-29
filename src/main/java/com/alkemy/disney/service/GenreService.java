@@ -7,5 +7,7 @@ import com.alkemy.disney.dto.GenreDTO;
 public interface GenreService {
 	GenreDTO save(GenreDTO dto);
 	List<GenreDTO> getAll();
+	GenreDTO getWithId(Long id);
 	void delete(Long id);
+	
 }

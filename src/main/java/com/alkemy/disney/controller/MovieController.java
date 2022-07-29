@@ -13,39 +13,39 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alkemy.disney.dto.GenreDTO;
-import com.alkemy.disney.service.GenreService;
+import com.alkemy.disney.dto.MovieDTO;
+import com.alkemy.disney.service.MovieService;
 
 //indicamos que es un controler
 @RestController
-@RequestMapping("genres")
+@RequestMapping("movies")
 
-public class GenreController {
+public class MovieController {
 	
 	@Autowired // para iniciar servicio
-	private GenreService genreService;
+	private MovieService movieService;
 	
 	@PostMapping // ingresamos a este controller por metodo POST
-	public ResponseEntity<GenreDTO> save(@RequestBody GenreDTO genre) {
-		// guardar genero
-		GenreDTO savedGenre =  genreService.save(genre);
-		// devolver 201(created) y el genero creado
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedGenre);
+	public ResponseEntity<MovieDTO> save(@RequestBody MovieDTO movie) {
+		// guardar pelicula
+		MovieDTO savedMovie =  movieService.save(movie);
+		// devolver 201(created) y la pelicula creado
+		return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
 	}
 	
 	@GetMapping
-	public ResponseEntity<List<GenreDTO>> getAll() {
+	public ResponseEntity<List<MovieDTO>> getAll() {
 		// obtener generos
-		List<GenreDTO> genres =  genreService.getAll();
+		List<MovieDTO> movies =  movieService.getAll();
 		// devolver 200(ok) y los generos
-		return ResponseEntity.ok().body(genres);
+		return ResponseEntity.ok().body(movies);
 	}
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id){
-		genreService.delete(id);
+		movieService.delete(id);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
+	
 }
-
