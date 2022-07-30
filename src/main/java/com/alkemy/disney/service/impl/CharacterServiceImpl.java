@@ -46,9 +46,9 @@ public class CharacterServiceImpl implements CharacterService {
 	}
 	
 	public CharacterDTO update(CharacterDTO dto) {
-		CharacterEntity entity = characterMapper.characterUpdateDTO2Entity(dto);
-		CharacterEntity entitySaved = characterRepository.save(entity);
-		CharacterDTO result = characterMapper.characterEntity2DTO(entitySaved, true);
+		CharacterEntity entity = characterMapper.characterDTO2UpdateEntity(dto);
+		CharacterEntity entityUpdated = characterRepository.save(entity);
+		CharacterDTO result = characterMapper.characterEntity2DTO(entityUpdated, true);
 		return result;
 	}
 
@@ -65,16 +65,15 @@ public class CharacterServiceImpl implements CharacterService {
 		List<CharacterBasicDTO> result = characterMapper.characterEntityList2BasicDTOList(entities);
 		return result;
 	}
-
-	public void delete(Long id) {
-		characterRepository.deleteById(id);
-	}
-
-	@Override
+	
 	public CharacterDTO getById(Long id) {
 		Optional<CharacterEntity> entity = characterRepository.findById(id);
 		CharacterDTO result = characterMapper.characterEntity2DTO(entity.get(), true);
 		return result;
 	}
+
+	public void delete(Long id) {
+		characterRepository.deleteById(id);
+	}	
 	
 }

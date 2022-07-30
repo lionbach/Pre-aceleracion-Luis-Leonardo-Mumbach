@@ -7,6 +7,9 @@ import com.alkemy.disney.dto.MovieDTO;
 public interface MovieService {
 	MovieDTO save(MovieDTO dto); 
 	List<MovieDTO> getAll();
+	MovieDTO getById(Long id);
+	MovieDTO update(MovieDTO movie);
 	void delete(Long id);
+	
 	
 }

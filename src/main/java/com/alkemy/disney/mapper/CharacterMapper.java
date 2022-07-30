@@ -50,7 +50,7 @@ public class CharacterMapper {
 		return dtos;
 	}
 
-	public CharacterEntity characterUpdateDTO2Entity(CharacterDTO dto) {
+	public CharacterEntity characterDTO2UpdateEntity(CharacterDTO dto) {
 		CharacterEntity entity = characterDTO2Entity(dto);
 		entity.setId(dto.getId());
 		return entity;

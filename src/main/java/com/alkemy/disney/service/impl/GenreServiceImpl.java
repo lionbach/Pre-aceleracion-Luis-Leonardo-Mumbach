@@ -29,7 +29,7 @@ public class GenreServiceImpl implements GenreService {
 		return result;
 	}
 	
-	public GenreDTO getWithId(Long id) {
+	public GenreDTO getById(Long id) {
 		Optional<GenreEntity> entity = genreRepository.findById(id);
 		GenreDTO result = genreMapper.genreEntity2DTO(entity.get());
 		return result;

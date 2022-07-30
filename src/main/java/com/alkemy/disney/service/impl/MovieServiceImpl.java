@@ -1,6 +1,8 @@
 package com.alkemy.disney.service.impl;
 
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,12 +23,10 @@ public class MovieServiceImpl implements MovieService {
 	private MovieRepository movieRepository;
 	@Autowired
 	private GenreService genreService;
-
-	
 	
 	public MovieDTO save(MovieDTO dto) {
 		// Recuperamos el Genero
-		GenreDTO savedGenre =  genreService.getWithId(dto.getGenreId());
+		GenreDTO savedGenre =  genreService.getById(dto.getGenreId());
 		dto.setGenre(savedGenre);
 
 		// guardardamos la pelicula
@@ -40,6 +40,21 @@ public class MovieServiceImpl implements MovieService {
 	public List<MovieDTO> getAll() {
 		List<MovieEntity> entities = movieRepository.findAll();
 		List<MovieDTO> result = movieMapper.movieEntityList2DTOList(entities, true);
+		return result;
+	}
+	
+
+	public MovieDTO getById(Long id) {
+		Optional<MovieEntity> entity = movieRepository.findById(id);
+		MovieDTO result = movieMapper.movieEntity2DTO(entity.get(), true);
+		return result;
+	}
+	
+	public MovieDTO update(MovieDTO dto) {
+		//actualizamos
+		MovieEntity entity = movieMapper.movieDTO2UpdateEntity(dto);
+		MovieEntity entityUpdated = movieRepository.save(entity);
+		MovieDTO result = movieMapper.movieEntity2DTO(entityUpdated, true);
 		return result;
 	}
 

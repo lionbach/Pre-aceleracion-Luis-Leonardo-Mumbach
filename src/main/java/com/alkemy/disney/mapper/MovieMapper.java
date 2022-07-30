@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 
 import com.alkemy.disney.dto.MovieDTO;
 import com.alkemy.disney.dto.CharacterDTO;
+import com.alkemy.disney.dto.GenreDTO;
 import com.alkemy.disney.entity.MovieEntity;
+import com.alkemy.disney.service.GenreService;
+import com.alkemy.disney.service.MovieService;
 import com.alkemy.disney.entity.CharacterEntity;
 
 
@@ -19,9 +22,12 @@ public class MovieMapper {
 	private GenreMapper genreMapper;
 	@Autowired
 	private CharacterMapper characterMapper;
-
+	@Autowired
+	private GenreService genreService;
+	@Autowired
+	private MovieService movieService;
 	
- 	public MovieEntity movieDTO2Entity(MovieDTO dto) {
+	public MovieEntity movieDTO2Entity(MovieDTO dto) {
 		MovieEntity entity = new MovieEntity();
 
 		entity.setImg(dto.getImg());
@@ -39,10 +45,6 @@ public class MovieMapper {
 		entity.setCharacters(characters);
 		return entity;
 	}
- 	
-
-
-
 
 	public MovieDTO movieEntity2DTO(MovieEntity entity, boolean loadCharacters) {
 		MovieDTO dto = new MovieDTO();
@@ -75,6 +77,38 @@ public class MovieMapper {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 		LocalDate date = LocalDate.parse(stringDate, formatter);
 		return date;
+	}
+
+	public MovieEntity movieDTO2UpdateEntity(MovieDTO dto) {
+		// recuperamos la pelicula
+		MovieDTO oldDTO = movieService.getById(dto.getId());
+		// Recuperamos el Genero
+		GenreDTO genre =  genreService.getById(dto.getGenreId());
+		dto.setGenre(genre);
+		
+		MovieEntity entity = new MovieEntity();
+		
+		// datos que no se actualizan
+		entity.setId(oldDTO.getId());
+		List<CharacterEntity> characters = new ArrayList<>();
+		for (CharacterDTO character : oldDTO.getCharacters()) {
+			CharacterEntity Char = characterMapper.characterDTO2Entity(character);
+			Char.setId(character.getId());
+			characters.add(Char);
+		}
+		entity.setCharacters(characters);
+		
+		// datos que pueden actualisarce
+		entity.setImg(dto.getImg());
+		entity.setTitle(dto.getTitle());
+		entity.setRating(dto.getRating());
+		entity.setReleaseDate(
+				string2LocalDate(dto.getReleaseDate())
+				);
+		entity.setGenre(genreMapper.genreDTO2Entity(dto.getGenre()));
+		entity.setGenreId(dto.getGenre().getId());
+
+		return entity;
 	}
  	
  	
