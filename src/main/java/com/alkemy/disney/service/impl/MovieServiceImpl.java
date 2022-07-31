@@ -65,7 +65,6 @@ public class MovieServiceImpl implements MovieService {
 	}
 	
 	public MovieDTO update(MovieDTO dto) {
-		//actualizamos
 		MovieEntity entity = movieMapper.movieDTO2UpdateEntity(dto);
 		MovieEntity entityUpdated = movieRepository.save(entity);
 		MovieDTO result = movieMapper.movieEntity2DTO(entityUpdated, true);
@@ -81,6 +80,13 @@ public class MovieServiceImpl implements MovieService {
 		Specification<MovieEntity> spec = movieSpecification.getByFilters(filtersDTO);
 		List<MovieEntity> entities = movieRepository.findAll(spec);
 		List<MovieBasicDTO> result = movieMapper.movieEntityList2BasicDTOList(entities);
+		return result;
+	}
+
+	public MovieDTO modifyCharacter(Long idMovie, Long idCharacter, String option) {
+		MovieEntity entity = movieMapper.modifyCharacters2Entity(idMovie, idCharacter, option);
+		MovieEntity entityUpdated = movieRepository.save(entity);
+		MovieDTO result = movieMapper.movieEntity2DTO(entityUpdated, true);
 		return result;
 	}
 

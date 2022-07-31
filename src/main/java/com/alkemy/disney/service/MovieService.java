@@ -12,5 +12,5 @@ public interface MovieService {
 	MovieDTO update(MovieDTO movie);
 	void delete(Long id);
 	List<MovieBasicDTO> getByFilters(String title, Long genreId, String order);
-	
+	MovieDTO modifyCharacter(Long idMovie, Long idCharacter, String option);
 }

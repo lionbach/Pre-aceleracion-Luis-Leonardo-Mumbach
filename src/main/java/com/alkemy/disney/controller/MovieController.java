@@ -39,9 +39,9 @@ public class MovieController {
 	@GetMapping("/{id}")
 	public ResponseEntity<MovieDTO> getById(@PathVariable Long id) {
 		// obtener pelicula
-		MovieDTO movie =  movieService.getById(id);
+		MovieDTO savedMovie =  movieService.getById(id);
 		// devolver 200(ok) y la pelicula
-		return ResponseEntity.ok().body(movie);
+		return ResponseEntity.ok().body(savedMovie);
 	}
 	
 	@GetMapping
@@ -57,7 +57,7 @@ public class MovieController {
 	@PutMapping
 	public ResponseEntity<MovieDTO> update(@RequestBody MovieDTO movie){
 		MovieDTO savedMovie =  movieService.update(movie);
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedMovie);
+		return ResponseEntity.ok().body(savedMovie);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -66,5 +66,16 @@ public class MovieController {
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 	
+	@PostMapping("/{idMovie}/characters/{idCharacter}")
+	public ResponseEntity<MovieDTO> addCharacter(@PathVariable Long idMovie, @PathVariable Long idCharacter) {
+		MovieDTO savedMovie =  movieService.modifyCharacter(idMovie, idCharacter, "add");
+		return ResponseEntity.ok().body(savedMovie);
+	}
+	
+	@DeleteMapping("/{idMovie}/characters/{idCharacter}")
+	public ResponseEntity<MovieDTO> removeCharacter(@PathVariable Long idMovie, @PathVariable Long idCharacter) {
+		MovieDTO savedMovie =  movieService.modifyCharacter(idMovie, idCharacter, "remove");
+		return ResponseEntity.ok().body(savedMovie);
+	}
 	
 }

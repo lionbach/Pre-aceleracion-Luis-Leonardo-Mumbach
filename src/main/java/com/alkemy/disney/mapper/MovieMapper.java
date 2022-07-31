@@ -4,6 +4,8 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import com.alkemy.disney.dto.CharacterDTO;
 import com.alkemy.disney.dto.GenreDTO;
 import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.entity.MovieEntity;
+import com.alkemy.disney.repository.CharacterRepository;
+import com.alkemy.disney.service.CharacterService;
 import com.alkemy.disney.service.GenreService;
 import com.alkemy.disney.service.MovieService;
 import com.alkemy.disney.entity.CharacterEntity;
@@ -23,6 +27,8 @@ public class MovieMapper {
 	private GenreMapper genreMapper;
 	@Autowired
 	private CharacterMapper characterMapper;
+	@Autowired
+	private CharacterRepository characterRepository;
 	@Autowired
 	private GenreService genreService;
 	@Autowired
@@ -126,6 +132,51 @@ public class MovieMapper {
 		dto.setTitle(entity.getTitle());
 		dto.setReleaseDate(entity.getReleaseDate().toString());
 		return dto;
+	}
+
+	public MovieEntity modifyCharacters2Entity(Long idMovie, Long idCharacter, String option) {
+		// recuperamos la pelicula
+		MovieDTO dto = movieService.getById(idMovie);
+		// Recuperamos el Genero
+		GenreDTO genre =  genreService.getById(dto.getGenreId());
+		dto.setGenre(genre);
+		
+		MovieEntity entity = new MovieEntity();
+		
+		// datos que no se actualizan
+		entity.setId(dto.getId());
+		entity.setImg(dto.getImg());
+		entity.setTitle(dto.getTitle());
+		entity.setRating(dto.getRating());
+		entity.setReleaseDate(
+				string2LocalDate(dto.getReleaseDate())
+				);
+		entity.setGenre(genreMapper.genreDTO2Entity(dto.getGenre()));
+		entity.setGenreId(dto.getGenre().getId());
+		
+		// modificacion de personajes
+		List<CharacterEntity> characters = new ArrayList<>();
+		// agregamos el nuevo personaje, si es requerido
+		if (option.equals("add")) {
+			//CharacterDTO newCharacterDTO = characterService.getByIdForAddCharacter(idCharacter);
+			Optional<CharacterEntity> optionalEntity = characterRepository.findById(idCharacter); 
+			//CharacterEntity newCharacterEntity = characterMapper.characterDTO2Entity(newCharacterDTO);
+			//newCharacterEntity.setId(newCharacterDTO.getId());
+			characters.add(optionalEntity.get());
+		}
+		// cargamos los viejos personajes, saltandonos el que se requiera eliminar
+		for (CharacterDTO character : dto.getCharacters()) {
+			if (!(option.equals("remove") && character.getId()==idCharacter)) {
+				CharacterEntity Char = characterMapper.characterDTO2Entity(character);
+				Char.setId(character.getId());
+				characters.add(Char);
+			}
+		}
+		entity.setCharacters(characters);
+		
+		
+
+		return entity;
 	}
  	
  	
