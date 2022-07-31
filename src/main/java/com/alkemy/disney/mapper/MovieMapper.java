@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.alkemy.disney.dto.MovieDTO;
 import com.alkemy.disney.dto.CharacterDTO;
 import com.alkemy.disney.dto.GenreDTO;
+import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.entity.MovieEntity;
 import com.alkemy.disney.service.GenreService;
 import com.alkemy.disney.service.MovieService;
@@ -109,6 +110,22 @@ public class MovieMapper {
 		entity.setGenreId(dto.getGenre().getId());
 
 		return entity;
+	}
+
+	public List<MovieBasicDTO> movieEntityList2BasicDTOList(List<MovieEntity> entities) {
+		List<MovieBasicDTO> dtos = new ArrayList<>();
+		for (MovieEntity entity: entities) {
+			dtos.add(MovieEntity2BasicDTO(entity));
+		}
+		return dtos;
+	}
+
+	private MovieBasicDTO MovieEntity2BasicDTO(MovieEntity entity) {
+		MovieBasicDTO dto = new MovieBasicDTO();
+		dto.setImg(entity.getImg());
+		dto.setTitle(entity.getTitle());
+		dto.setReleaseDate(entity.getReleaseDate().toString());
+		return dto;
 	}
  	
  	

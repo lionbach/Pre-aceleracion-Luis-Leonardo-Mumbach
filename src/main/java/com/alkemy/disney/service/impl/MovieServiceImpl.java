@@ -4,25 +4,39 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.alkemy.disney.dto.MovieDTO;
+import com.alkemy.disney.dto.MovieFiltersDTO;
 import com.alkemy.disney.dto.GenreDTO;
+import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.entity.MovieEntity;
 import com.alkemy.disney.mapper.MovieMapper;
 import com.alkemy.disney.repository.MovieRepository;
+import com.alkemy.disney.repository.specification.MovieSpecification;
 import com.alkemy.disney.service.MovieService;
 import com.alkemy.disney.service.GenreService;
 
 @Service
 public class MovieServiceImpl implements MovieService {
 	
-	@Autowired
 	private MovieMapper movieMapper;
-	@Autowired
 	private MovieRepository movieRepository;
+	private MovieSpecification movieSpecification;
 	@Autowired
 	private GenreService genreService;
+	
+	@Autowired
+	public MovieServiceImpl(
+			MovieRepository movieRepository,
+			MovieSpecification movieSpecification,
+			MovieMapper movieMapper
+			) {
+		this.movieRepository = movieRepository;
+		this.movieSpecification = movieSpecification;
+		this.movieMapper = movieMapper;
+	}
 	
 	public MovieDTO save(MovieDTO dto) {
 		// Recuperamos el Genero
@@ -60,6 +74,14 @@ public class MovieServiceImpl implements MovieService {
 
 	public void delete(Long id) {
 		movieRepository.deleteById(id);
+	}
+
+	public List<MovieBasicDTO> getByFilters(String title, Long genreId, String order) {
+		MovieFiltersDTO filtersDTO = new MovieFiltersDTO(title, genreId, order);
+		Specification<MovieEntity> spec = movieSpecification.getByFilters(filtersDTO);
+		List<MovieEntity> entities = movieRepository.findAll(spec);
+		List<MovieBasicDTO> result = movieMapper.movieEntityList2BasicDTOList(entities);
+		return result;
 	}
 
 }

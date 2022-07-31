@@ -55,7 +55,7 @@ public class CharacterSpecification {
 			query.distinct(true);
 			
 			// ordenar
-			criteriaBuilder.asc(root.get("name"));
+			query.orderBy(criteriaBuilder.asc(root.get("name")));
 			
 			/*
 			String orderByField = "name";

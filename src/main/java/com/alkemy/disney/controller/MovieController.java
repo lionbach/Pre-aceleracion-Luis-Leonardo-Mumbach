@@ -1,5 +1,7 @@
 package com.alkemy.disney.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -10,8 +12,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alkemy.disney.dto.MovieBasicDTO;
 import com.alkemy.disney.dto.MovieDTO;
 import com.alkemy.disney.service.MovieService;
 
@@ -40,15 +44,15 @@ public class MovieController {
 		return ResponseEntity.ok().body(movie);
 	}
 	
-	/*
 	@GetMapping
-	public ResponseEntity<List<MovieDTO>> getAll() {
-		// obtener generos
-		List<MovieDTO> movies =  movieService.getAll();
-		// devolver 200(ok) y los generos
+	public ResponseEntity<List<MovieBasicDTO>> getByFilters(
+			@RequestParam(required=false) String title,
+			@RequestParam(required=false, defaultValue = "0") Long genreId,
+			@RequestParam(required=false, defaultValue = "ASC") String order
+			) {
+		List<MovieBasicDTO> movies =  movieService.getByFilters(title, genreId, order);
 		return ResponseEntity.ok().body(movies);
 	}
-	*/
 	
 	@PutMapping
 	public ResponseEntity<MovieDTO> update(@RequestBody MovieDTO movie){
